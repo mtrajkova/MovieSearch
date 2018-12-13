@@ -12,7 +12,7 @@ import com.labs.mpip.lab2.persistance.dao.MovieDao;
 public abstract class MovieDatabase extends RoomDatabase {
 
     public abstract MovieDao movieDao();
-/*
+
     private static MovieDatabase movieDatabase;
 
     public static MovieDatabase getMovieDatabase(Context context) {
@@ -23,5 +23,5 @@ public abstract class MovieDatabase extends RoomDatabase {
             }
         }
         return movieDatabase;
-    }*/
+    }
 }
