@@ -15,4 +15,8 @@ public class MovieResponse {
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
+
+    public Movie getFirst(){
+        return movies.get(0);
+    }
 }
