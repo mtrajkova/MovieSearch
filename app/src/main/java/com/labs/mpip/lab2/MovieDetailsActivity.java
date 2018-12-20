@@ -36,7 +36,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
 
         if (extras != null) {
-            imdbId = extras.getString("imdbId");
+            imdbId = extras.getString("imdbID");
             movieDetailsViewModel.setMovie(imdbId);
              movieDetailsViewModel.getMovie().observe(this, new Observer<Movie>() {
                 @Override

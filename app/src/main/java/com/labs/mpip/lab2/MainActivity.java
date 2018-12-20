@@ -2,6 +2,7 @@ package com.labs.mpip.lab2;
 
 import android.app.SearchManager;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -34,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private RecyclerViewAdapter adapter;
     private List<Movie> movies = new ArrayList<>();
@@ -53,28 +54,32 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             query = getIntent().getStringExtra(SearchManager.QUERY);
         }
 
-        recyclerView = findViewById(R.id.rvMovies);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView = findViewById(R.id.rvMovies);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        adapter = new RecyclerViewAdapter(this, movies);
+//        recyclerView.setAdapter(adapter);
+
         adapter = new RecyclerViewAdapter(this, movies);
-        adapter.setClickListener(this);
+        recyclerView = (RecyclerView) findViewById(R.id.rvMovies);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         service = OmdbAPI.getRetrofit().create(OmdbApiService.class);
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+        movieViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                if(movies!=null)
+                    adapter.setmData(movies);
+            }
+        });
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 new LinearLayoutManager(this).getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-//        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, MovieDetailsActivity.class);
-        intent.putExtra("imdbId", adapter.getItem(position).imdbID);
-
-        startActivity(intent);
-    }
 
     public void getData(String query){
         service.getMovies(query, "7e25ed24").enqueue(new Callback<MovieResponse>() {
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
                 if (response.isSuccessful()) {
                     movies.addAll(response.body().getMovies());
                     adapter.setmData(movies);
-                    recyclerView.setAdapter(adapter);
+//                    recyclerView.setAdapter(adapter);
 
                     movieViewModel.deleteAll();
                     for (Movie movie : movies) {

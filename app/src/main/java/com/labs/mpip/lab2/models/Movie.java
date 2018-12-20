@@ -18,12 +18,38 @@ public class Movie {
     @ColumnInfo(name = "title")
     public String title;
 
-    public Movie(@NonNull String mId, String title) {
+    @SerializedName("Poster")
+    public String poster;
+
+    @SerializedName("Year")
+    public String year;
+
+    public Movie(@NonNull String mId, String title, String poster, String year) {
         this.imdbID = mId;
         this.title = title;
+        this.poster = poster;
+        this.year = year;
     }
 
+
+
     public Movie(){}
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 
     public String getTitle() {
         return title;
